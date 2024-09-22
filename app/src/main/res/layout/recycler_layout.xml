@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout_songs"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:layout_marginBottom="8dp"
+
+    android:background="@color/dark_gray"
+    tools:ignore="ExtraText">
+
+    <ImageView
+        android:id="@+id/imageViewMusicCover"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:contentDescription="Music Cover Image"
+        android:scaleType="fitCenter"
+        android:src="@drawable/default_music" /> />
+
+    <!-- TextView for the music title -->
+    <TextView
+        android:id="@+id/textViewMusicTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/imageViewMusicCover"
+        android:layout_toRightOf="@id/imageViewMusicCover"
+        android:layout_alignParentTop="true"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:text="Music Title" />
+
+</RelativeLayout>

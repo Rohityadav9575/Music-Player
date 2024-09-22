@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.musicplayer"
-        minSdk 24
+        minSdk 33
         targetSdk 34
         versionCode 1
         versionName "1.0"
@@ -44,4 +44,10 @@ dependencies {
     implementation(libs.fragment)
 
     implementation("androidx.activity:activity:1.9.2")
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+
+
 }
