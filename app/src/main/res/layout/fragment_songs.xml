@@ -5,7 +5,8 @@
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SongsFragment">
+    tools:context=".SongsFragment"
+    android:background="@color/dark_gray">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/songs_recycleview"

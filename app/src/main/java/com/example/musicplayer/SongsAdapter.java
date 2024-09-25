@@ -1,6 +1,7 @@
 package com.example.musicplayer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,6 +38,8 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull SongsAdapter.ViewHolder holder, int position) {
         holder.textViewMusicTitle.setText(musicFilesModels.get(position).getTitle());
+        holder.textViewMusicArtist.setText(musicFilesModels.get(position).getArtists());
+
         byte[] image = null;
         try {
             image = getAlbumArt(musicFilesModels.get(position).getPath());
@@ -54,6 +57,15 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                     .load(R.drawable.default_music)
                     .into(holder.imageViewMusicCover);
         }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(context,PlayingActivity.class);
+                intent.putExtra("Position",holder.getAdapterPosition());
+                context.startActivity(intent);
+
+            }
+        });
     }
 
     @Override
@@ -62,11 +74,12 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
     }
     public static class ViewHolder extends RecyclerView.ViewHolder{
         ImageView imageViewMusicCover;
-        TextView textViewMusicTitle;
+        TextView textViewMusicTitle,textViewMusicArtist;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageViewMusicCover=itemView.findViewById(R.id.imageViewMusicCover);
             textViewMusicTitle=itemView.findViewById(R.id.textViewMusicTitle);
+            textViewMusicArtist=itemView.findViewById(R.id.textViewMusicArtist);
         }
     }
     private byte[] getAlbumArt(String uri) throws IOException {
