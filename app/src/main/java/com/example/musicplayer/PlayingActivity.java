@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentManager;
 
 import com.bumptech.glide.Glide;
 
@@ -31,7 +33,7 @@ import java.util.Random;
 
 public class PlayingActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 ImageView music_image,back;
-ImageButton volume,shuffle,Repeat,next,previous;
+ImageButton volume,shuffle,Repeat,next,previous,favourite;
 TextView song_name,current_time,total_time;
 SeekBar seekBar;
 Button play;
@@ -42,6 +44,7 @@ static MediaPlayer mediaPlayer;
 Handler handler;
 static boolean Shuffled=false,Repeatd=false;
 private  Thread PlayThread,NextThread,PrevThread;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +92,17 @@ private  Thread PlayThread,NextThread,PrevThread;
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(getApplicationContext(),SongsFragment.class);
-                startActivity(intent);
+                // Get the FragmentManager
+                FragmentManager fragmentManager = getSupportFragmentManager();
+
+                // Check if there's any fragment in the back stack
+                if (fragmentManager.getBackStackEntryCount() > 0) {
+                    // Pop the last fragment transaction, which will return to the previous fragment
+                    fragmentManager.popBackStack();
+                } else {
+                    // If no fragments in back stack, finish the activity
+                    finish();
+                }
             }
         });
         shuffle.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +131,44 @@ private  Thread PlayThread,NextThread,PrevThread;
                 }
             }
         });
+
+        favourite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String songName = song_name.getText().toString();
+                String songPath = uri.toString();
+                String songDuration = total_time.getText().toString();
+
+                AppDatabase appDatabase = AppDatabase.getInstance(getApplicationContext());
+
+                // Check if the song already exists in the database
+                new Thread(() -> {
+                    SongsEntity existingSong = appDatabase.dao().getSongByName(songName); // Assuming you have a method to get a song by name
+
+                    if (existingSong == null) {
+                        // Save to database if it doesn't exist
+                        SongsEntity songsEntity = new SongsEntity(songName, songPath, songDuration);
+                        appDatabase.dao().insert(songsEntity);
+                        runOnUiThread(() ->{
+                            Toast.makeText(getApplicationContext(), "Added to favourites", Toast.LENGTH_SHORT).show();
+
+                        });
+
+
+                    } else {
+                        // Remove from database if it exists
+                        appDatabase.dao().delete(existingSong);
+                        runOnUiThread(() -> {
+                            Toast.makeText(getApplicationContext(), "Removed from favourites", Toast.LENGTH_SHORT).show();
+
+                        });
+
+
+                    }
+                }).start();
+            }
+        });
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -425,6 +475,7 @@ private  Thread PlayThread,NextThread,PrevThread;
         total_time=findViewById(R.id.TotalTime);
         seekBar=findViewById(R.id.musicSeekBar);
         play=findViewById(R.id.play_pauseButton);
+        favourite=findViewById(R.id.favouriteButton);
 
     }
     private String formatDuration(int seconds) {

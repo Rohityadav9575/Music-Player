@@ -37,6 +37,9 @@
             android:textColor="@color/white"
             android:textSize="18sp"
             tools:ignore="TextSizeCheck" />
+
+
+
     </RelativeLayout>
 
     <!-- Album Art Section -->
@@ -99,6 +102,16 @@
             android:paddingStart="5dp"
             android:src="@drawable/baseline_volume"
             tools:ignore="TouchTargetSizeCheck" />
+
+        <ImageButton
+            android:id="@+id/favouriteButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/black"
+            android:contentDescription="favourite"
+            android:paddingStart="5dp"
+            android:src="@drawable/baseline_favorite_border_24"
+            tools:ignore="TouchTargetSizeCheck"/>
 
         <View
             android:layout_width="0dp"
